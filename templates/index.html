@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Samsung Code C-Centric</title>
+    <link href="{{ url_for('static',filename='styles/style.css')}}" rel="stylesheet" />
+</head>
+
+<body>
+    <h1>Get Samsung Code C-Centric</h1>
+    <form action="/ccentric" method="get" onsubmit="return validateIMEI();">
+        <input type="text" name="imei" id="imei" placeholder="Enter an IMEI" />
+        <button type="submit" class="btn btn-custom">Submit</button>
+    </form>
+
+    <script>
+        function validateIMEI() {
+            var imeiInput = document.getElementById("imei");
+            var imeiValue = imeiInput.value.trim();
+
+            // Simple check for numeric value and length
+            if (/^\d+$/.test(imeiValue) && (imeiValue.length === 12 || imeiValue.length === 15)) {
+                return true;
+            } else {
+                alert("Invalid IMEI. Please enter a valid IMEI.");
+                return false;
+            }
+        }
+    </script>
+</body>
+
+</html>

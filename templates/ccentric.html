@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ imei }} Ccentric Samsung</title>
+    <link href="{{ url_for('static',filename='styles/style.css')}}" rel="stylesheet" />
+
+</head>
+
+<body>
+    <h1>{{ imei }} Ccentric Samsung</h1>
+
+    <h2>Output</h2>
+    <p>
+        {% if result == 'Not found.' %}
+        Result is: <span class="red-text">There is no code</span>
+        {% elif result[0] == '9' and result|length == 12 %}
+        Result is: <span class="red-text">{{ result }}</span>
+        {% elif result[0] == '9' and result|length == 17 %}
+        Result is: <span class="red-text">{{ result[:15] }}</span>
+        {% elif result == ["Invalid IMEI number."] %}
+        Result is: <span class="red-text">Invalid IMEI Number</span>
+        {% elif result == 'The signatures do not match' %}
+        Result is: <span class="red-text">a space has been left while entering the IMEI</span>
+        {% endif %}
+    </p>
+    <br>
+    <form action="/ccentric" method="get" onsubmit="return validateIMEI();">
+        <input type="text" name="imei" id="imei" placeholder="Enter an IMEI" />
+        <button type="submit" class="btn btn-custom">Submit</button>
+    </form>
+
+    <script>
+        function validateIMEI() {
+            var imeiInput = document.getElementById("imei");
+            var imeiValue = imeiInput.value.trim();
+
+            // Simple check for numeric value and length
+            if (/^\d+$/.test(imeiValue) && (imeiValue.length === 12 || imeiValue.length === 15)) {
+                return true;
+            } else {
+                alert("Invalid IMEI. Please enter a valid IMEI.");
+                return false;
+            }
+        }
+    </script>
+</body>
+
+</html>

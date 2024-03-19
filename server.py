@@ -12,8 +12,18 @@ import pymongo
 load_dotenv()
 
 # Access environment variables
+USERNAME1 = os.environ.get("USERNAME1")
+SECRET = os.environ.get("SECRET")
+MONGODB_USERNAME = os.environ.get("MONGODB_USERNAME")
+MONGODB_PASSWORD = os.environ.get("MONGODB_PASSWORD")
 MONGODB_USERNAME = os.getenv("MONGODB_USERNAME")
 MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
+
+# Now you can use these variables in your script
+print(USERNAME1)
+print(SECRET)
+print(MONGODB_USERNAME)
+print(MONGODB_PASSWORD)
 
 app = Flask(__name__)
 # Establish connection to MongoDB

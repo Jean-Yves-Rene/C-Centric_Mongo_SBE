@@ -14,8 +14,8 @@ def check_code_c_centric(imei):
     # Debug prints
     # print(f"Username: {os.getenv('USERNAME1')}")
     # print(f"Secret: {os.getenv('SECRET')}")
-    # Define the body as a JSON string with the user-entered IMEI
-    body_string = f'{{"imei":"{imei}"}}'
+   # Define the body as a JSON string with the user-entered IMEI
+    body_string = json.dumps({"imei": imei})
     #print(imei)
     #body_string = '{"imei":"353325478187614"}'
     print(body_string)

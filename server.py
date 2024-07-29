@@ -14,26 +14,18 @@ load_dotenv()
 # Access environment variables
 USERNAME1 = os.environ.get("USERNAME1")
 SECRET = os.environ.get("SECRET")
-MONGODB_USERNAME = os.environ.get("MONGODB_USERNAME")
-MONGODB_PASSWORD = os.environ.get("MONGODB_PASSWORD")
 MONGODB_USERNAME = os.getenv("MONGODB_USERNAME")
 MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
-
-# Now you can use these variables in your script
-print(USERNAME1)
-print(SECRET)
-print(MONGODB_USERNAME)
-print(MONGODB_PASSWORD)
 
 app = Flask(__name__)
 # Establish connection to MongoDB
 #client = pymongo.MongoClient("mongodb://127.0.0.1:27017/")
 # Use credentials to connect to MongoDB
-uri = f"mongodb+srv://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@cluster0.zvtjbni.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+uri = f"mongodb://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@10.131.1.106/?authSource=admin"
 client = MongoClient(uri)
 
-db = client["C-Centric"]  # Replace "your_database_name" with your actual database name
-collection = db["imeis"]  # Replace "your_collection_name" with your actual collection name
+db = client["local"]  # Replace "your_database_name" with your actual database name
+collection = db["Imeis_C_Centric"]  # Replace "your_collection_name" with your actual collection name
 
 # Function to get current date and time
 def get_current_date():
@@ -76,7 +68,10 @@ def get_code():
             "result": result_code_c_centric,
             "date_added": current_date  # Add date field,
             }
-        collection.insert_one(data)
+        try:
+            collection.insert_one(data)
+        except errors.PyMongoError as e:
+            print(f"Error inserting data into MongoDB: {e}")
         print(imei)
         print(result_code_c_centric)
         return render_template(
@@ -91,20 +86,9 @@ def get_code():
     
     
     
-# Gracefully disconnect from MongoDB when the application exits
-#@app.teardown_appcontext
-#def close_connection(exception):
- #   client.close()
+@app.teardown_appcontext
+def close_connection(exception):
+    client.close()
 
-#@app.after_request
-#def after_request(response):
-#    client.close()
-#    return response
-    
-if __name__== "__main__":
-    serve(app, host="0.0.0.0",port=8000)
-
-# Close MongoDB connection when the application context is torn down
-#@app.teardown_appcontext
-#def close_connection(exception):
-#client.close()
+if __name__ == "__main__":
+    serve(app, host="0.0.0.0", port=8000)

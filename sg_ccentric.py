@@ -1,31 +1,21 @@
 import requests
 from dotenv import load_dotenv
 import os
-from datetime import datetime  # Import datetime module
+from datetime import datetime
 import json
 import hmac
 import hashlib
 
+# Load environment variables
 load_dotenv()
 
 def check_code_c_centric(imei):
     
-
-    # Debug prints
-    # print(f"Username: {os.getenv('USERNAME1')}")
-    # print(f"Secret: {os.getenv('SECRET')}")
-   # Define the body as a JSON string with the user-entered IMEI
-    body_string = json.dumps({"imei": imei})
-    #print(imei)
-    #body_string = '{"imei":"353325478187614"}'
+    body_string = f'{{"imei":"{imei}"}}'
     print(body_string)
-    #Replace with your actual username and secret
     username = os.getenv('USERNAME1')
     secret = os.getenv('SECRET')
-    # print(f"Username: {username}")
-    # print(f"Secret: {secret}")
-
-
+   
     # Get the current date and time in ISO 8601 format
     x_datetime = datetime.utcnow().replace(microsecond=0).isoformat() + 'Z'
 
@@ -54,11 +44,6 @@ def check_code_c_centric(imei):
     url = 'https://greetme-api.cccsys.co.uk/ccbooking/api/v2/samsung-ref'  # Replace with your actual URL
     response = requests.post(url, json=data, headers=headers)
 
-    # Print the response
-    #print(response.text)
-    # if '{"error":"Not found."}' in response.text:
-    #     print("There is no code")
-    #     elif
     json_data = response.text
     parsed_data = json.loads(json_data)
 

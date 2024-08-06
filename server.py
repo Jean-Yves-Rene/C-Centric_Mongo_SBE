@@ -18,24 +18,24 @@ MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
 app = Flask(__name__)
 
 # Establish connection to MongoDB using credentials
-# uri = f"mongodb://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@10.131.1.106/?authSource=admin"
-# client = None
+uri = f"mongodb://{MONGODB_USERNAME}:{MONGODB_PASSWORD}@10.131.1.106/?authSource=admin"
+client = None
 
-# try:
-#     client = MongoClient(uri)
-#     # Check if connection is successful
-#     db_names = client.list_database_names()
-#     print("Connected to MongoDB")
-#     print("Available databases:")
-#     for db_name in db_names:
-#         print(db_name)
-# except errors.ConnectionFailure as e:
-#     print("Could not connect to MongoDB:", e)
-#     client = None
+try:
+    client = MongoClient(uri)
+    # Check if connection is successful
+    db_names = client.list_database_names()
+    print("Connected to MongoDB")
+    print("Available databases:")
+    for db_name in db_names:
+        print(db_name)
+except errors.ConnectionFailure as e:
+    print("Could not connect to MongoDB:", e)
+    client = None
 
-# if client:
-#     db = client["local"]  # Replace with your actual database name
-#     collection = db["Imeis_C_Centric"]  # Replace with your actual collection name
+if client:
+    db = client["local"]  # Replace with your actual database name
+    collection = db["Imeis_C_Centric"]  # Replace with your actual collection name
 
 # Function to get current date and time
 def get_current_date():
@@ -59,9 +59,9 @@ def get_code():
             "result": result_code_c_centric,
             "date_added": current_date  # Add date field
         }
-        # Insert IMEI into MongoDB collection if client is connected
-        # if client:
-        #     collection.insert_one(data)
+        #Insert IMEI into MongoDB collection if client is connected
+        if client:
+            collection.insert_one(data)
         return render_template(
             "ccentric.html",
             imei=imei,  # Pass imei to the template
@@ -71,10 +71,10 @@ def get_code():
         return render_template("invalid_imei.html")
 
 # Gracefully disconnect from MongoDB when the application exits
-# @app.teardown_appcontext
-# def close_connection(exception):
-#     if client:
-#         client.close()
+@app.teardown_appcontext
+def close_connection(exception):
+    if client:
+        client.close()
 
 if __name__ == "__main__":
     serve(app, host="0.0.0.0", port=8000)
